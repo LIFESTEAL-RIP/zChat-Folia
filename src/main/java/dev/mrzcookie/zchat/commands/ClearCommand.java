@@ -4,7 +4,7 @@ import dev.mrzcookie.zchat.ZChatPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.logging.Level;
@@ -18,7 +18,7 @@ public class ClearCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        YamlConfiguration config = this.plugin.getConfigManager().getConfig("config");
+        FileConfiguration config = this.plugin.getConfig();
 
         String executer = sender instanceof Player ? sender.getName() : "Console";
 

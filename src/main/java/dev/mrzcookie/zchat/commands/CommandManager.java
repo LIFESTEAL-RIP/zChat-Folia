@@ -2,9 +2,8 @@ package dev.mrzcookie.zchat.commands;
 
 import dev.mrzcookie.zchat.ZChatPlugin;
 import org.bukkit.command.*;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -22,7 +21,7 @@ public class CommandManager {
 
         this.pluginCommands = new HashSet<>();
 
-        YamlConfiguration config = this.plugin.getConfigManager().getConfig("config");
+        FileConfiguration config = this.plugin.getConfig();
 
         if (config.getBoolean("commands.zchat.enabled", false)) this.register("zchat", "Manage your zChat plugin.", config.getStringList("commands.zchat.aliases"), "/zchat <version/reload>", config.getString("commands.zchat.permission"), new ZChatCommand(this.plugin), new ZChatCommand(this.plugin));
         if (config.getBoolean("commands.chatcooldown.enabled", false)) this.register("chatcooldown", "Set or toggle the cooldown on chat.", config.getStringList("commands.chatcooldown.aliases"), "/chatcooldown <set/toggle> [<seconds>]", config.getString("commands.chatcooldown.permission"), new CooldownCommand(plugin), new CooldownCommand(this.plugin));

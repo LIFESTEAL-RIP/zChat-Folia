@@ -1,14 +1,17 @@
 package dev.mrzcookie.zchat.commands;
 
 import dev.mrzcookie.zchat.ZChatPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FilterCommand implements CommandExecutor, TabCompleter {
     private final ZChatPlugin plugin;
@@ -19,21 +22,19 @@ public class FilterCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        YamlConfiguration config = this.plugin.getConfigManager().getConfig("config");
+        FileConfiguration config = this.plugin.getConfig();
 
         if (args.length > 0) {
-            YamlConfiguration phrasesConfig = this.plugin.getConfigManager().getConfig("phrases");
-
             switch (args[0].toLowerCase()) {
                 case "add":
                     if (args.length == 2) {
-                        List<String> blockedPhrases = this.plugin.getConfigManager().getConfig("phrases").getStringList("blocked-phrases");
+                        List<String> blockedPhrases = config.getStringList("chat-filter.blocked-phrases");
 
                         if (!blockedPhrases.contains(args[1])) {
                             blockedPhrases.add(args[1]);
 
-                            phrasesConfig.set("blocked-phrases", blockedPhrases);
-                            this.plugin.getConfigManager().saveConfig("phrases");
+                            config.set("chat-filter.blocked-phrases", blockedPhrases);
+                            this.plugin.saveConfig();
 
                             this.plugin.getMessageManager().send(sender, config.getString("commands.chatfilter.messages.added-phrase").replace("{phrase}", args[1]));
                         } else {
@@ -45,13 +46,13 @@ public class FilterCommand implements CommandExecutor, TabCompleter {
                     break;
                 case "remove":
                     if (args.length == 2) {
-                        List<String> blockedPhrases = this.plugin.getConfigManager().getConfig("phrases").getStringList("blocked-phrases");
+                        List<String> blockedPhrases = config.getStringList("chat-filter.blocked-phrases");
 
-                        if (!blockedPhrases.contains(args[1])) {
+                        if (blockedPhrases.contains(args[1])) {
                             blockedPhrases.remove(args[1]);
 
-                            phrasesConfig.set("blocked-phrases", blockedPhrases);
-                            this.plugin.getConfigManager().saveConfig("phrases");
+                            config.set("chat-filter.blocked-phrases", blockedPhrases);
+                            this.plugin.saveConfig();
 
                             this.plugin.getMessageManager().send(sender, config.getString("commands.chatfilter.messages.removed-phrase").replace("{phrase}", args[1]));
                         } else {
@@ -65,7 +66,7 @@ public class FilterCommand implements CommandExecutor, TabCompleter {
                     boolean isEnabled = config.getBoolean("chat-filter.enabled", false);
 
                     config.set("chat-filter.enabled", !isEnabled);
-                    this.plugin.getConfigManager().saveConfig("config");
+                    this.plugin.saveConfig();
 
                     this.plugin.getMessageManager().send(sender, config.getString(isEnabled ? "commands.chatfilter.messages.disabled-filter" : "commands.chatfilter.messages.enabled-filter"));
                     break;
@@ -88,6 +89,10 @@ public class FilterCommand implements CommandExecutor, TabCompleter {
             arguments.add("add");
             arguments.add("remove");
             arguments.add("toggle");
+        } else if (args.length == 2) {
+            if (Objects.equals(args[0], "add") || Objects.equals(args[0], "remove")) {
+                arguments.addAll(this.plugin.getConfig().getStringList("chat-filter.blocked-phrases"));
+            }
         }
 
         return arguments;

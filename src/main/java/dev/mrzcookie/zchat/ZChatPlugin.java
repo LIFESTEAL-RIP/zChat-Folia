@@ -9,14 +9,14 @@ import java.util.logging.Level;
 
 public class ZChatPlugin extends JavaPlugin {
     private MessageManager messageManager;
-    private ConfigManager configManager;
     private CommandManager commandManager;
     private EventManager eventManager;
 
     @Override
     public void onEnable() {
+        this.saveDefaultConfig();
+
         this.messageManager = new MessageManager(this);
-        this.configManager = new ConfigManager(this);
         this.commandManager = new CommandManager(this);
         this.eventManager = new EventManager(this);
 
@@ -34,10 +34,6 @@ public class ZChatPlugin extends JavaPlugin {
 
     public MessageManager getMessageManager() {
         return this.messageManager;
-    }
-
-    public ConfigManager getConfigManager() {
-        return this.configManager;
     }
 
     public CommandManager getCommandManager() {

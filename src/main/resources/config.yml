@@ -32,6 +32,9 @@ chat-filter:
   messages:
     error:
       blocked-phrase: "<red>You are not allowed to say that!</red>"
+  blocked-phrases:
+    - poopybutt
+    - meanieface
 
 # Chat Cooldown
 chat-cooldown:

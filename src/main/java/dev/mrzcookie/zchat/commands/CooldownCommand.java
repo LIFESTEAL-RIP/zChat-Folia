@@ -5,7 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +19,14 @@ public class CooldownCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        YamlConfiguration config = this.plugin.getConfigManager().getConfig("config");
+        FileConfiguration config = this.plugin.getConfig();
 
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
                 case "set":
                     if (args.length == 2) {
                         config.set("commands.chatcooldown.interval", Integer.parseInt(args[1]));
-                        this.plugin.getConfigManager().saveConfig("config");
+                        this.plugin.saveConfig();
 
                         this.plugin.getMessageManager().send(sender, config.getString("commands.chatcooldown.messages.cooldown-set").replace("{cooldown}", args[1]));
                     } else {
@@ -37,7 +37,7 @@ public class CooldownCommand implements CommandExecutor, TabCompleter {
                     boolean isEnabled = config.getBoolean("chat-cooldown.enabled", false);
 
                     config.set("chat-cooldown.enabled", !isEnabled);
-                    this.plugin.getConfigManager().saveConfig("config");
+                    this.plugin.saveConfig();
 
                     this.plugin.getMessageManager().send(sender, config.getString(isEnabled ? "commands.chatcooldown.messages.disabled-cooldown" : "commands.chatcooldown.messages.enabled-cooldown"));
                     break;
