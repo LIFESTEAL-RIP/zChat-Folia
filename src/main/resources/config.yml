@@ -1,0 +1,105 @@
+#
+# zChat By MrZCookie
+# Version 1.0.0
+#
+
+# Plugin Messages
+messages:
+  error:
+    usage: "<red>Usage: {usage}</red>"
+    player-only: "<red>Only a player can execute this command!</red>"
+    no-player: "<red>That player doesn't exist!</red>"
+
+# Formatted Chat
+formatted-chat:
+  enabled: true
+  permissions:
+    colorized-chat: chat.colorize
+  formats:
+    default:
+      format: "<gray>{prefix}{username}{suffix}</gray> <dark_gray>»</dark_gray> <gray>{message}</gray>"
+      priority: 0
+    staff:
+      format: "<white>{prefix}{username}{suffix}</white> <dark_gray>»</dark_gray> <white>{message}</white>"
+      priority: 10
+      permission: chat.format.staff
+
+# Chat Filter
+chat-filter:
+  enabled: true
+  permissions:
+    bypass: chat.bypass.filter
+  messages:
+    error:
+      blocked-phrase: "<red>You are not allowed to say that!</red>"
+
+# Chat Cooldown
+chat-cooldown:
+  enabled: true
+  interval: 3
+  permissions:
+    bypass: chat.bypass.cooldown
+  messages:
+    error:
+      on-cooldown: "<red>Please wait before sending another message!</red>"
+
+# Toggle Chat
+toggle-chat:
+  chat-enabled: true
+  permissions:
+    bypass: chat.bypass.disabled
+  messages:
+    error:
+      chat-disabled: "<red>Chat is currently disabled!</red>"
+
+# Plugin Commands
+commands:
+  zchat:
+    enabled: true
+    permission: chat.command.zchat
+    aliases: []
+    messages:
+      plugin-reloaded: "<green>zChat has been reloaded successfully.</green>"
+  chatcooldown:
+    enabled: true
+    permission: chat.command.chatcooldown
+    aliases: []
+    messages:
+      cooldown-set: "<green>The cooldown has been set to {cooldown}."
+      enabled-cooldown: "<green>Enabled chat cooldown.</green>"
+      disabled-cooldown: "<red>Disabled chat cooldown.</red>"
+      error:
+        specify-cooldown: "<red>You must specify the cooldown in seconds!</red>"
+  chatfilter:
+    enabled: true
+    permission: chat.command.chatfilter
+    aliases:
+      - filter
+    messages:
+      added-phrase: "<green>{phrase} has been added to the chat filter.</green>"
+      removed-phrase: "<red>{phrase} has been removed from the chat filter.</red>"
+      enabled-filter: "<green>Enabled chat filter.</green>"
+      disabled-filter: "<red>Disabled chat filter.</red>"
+      error:
+        specify-phrase: "<red>You must specify a phrase!</red>"
+        already-added: "<red>That phrase is already added!</red>"
+        already-removed: "<red>That phrase is already removed!</red>"
+  togglechat:
+    enabled: true
+    permission: chat.command.togglechat
+    aliases:
+      - tc
+      - mutechat
+      - mc
+    messages:
+      chat-disabled-broadcast: "<red>Chat has been disabled by {executer}.</red>"
+      chat-enabled-broadcast: "<green>Chat has been enabled by {executer}.</green>"
+  clearchat:
+    enabled: true
+    permission: chat.command.clearchat
+    aliases:
+      - cc
+    permissions:
+      bypass: chat.bypass.chatclear
+    messages:
+      broadcast: "<green>Chat has been cleared by {executer}."

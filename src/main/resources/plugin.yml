@@ -1,0 +1,8 @@
+name: zChat
+description: A minimal chat plugin.
+version: ${version}
+main: dev.mrzcookie.zchat.ZChatPlugin
+author: MrZCookie
+api-version: 1.13
+depend: [LuckPerms]
+softdepend: [PlaceholderAPI]
