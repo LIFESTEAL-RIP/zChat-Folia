@@ -1,7 +1,7 @@
 zChat
 ======================================================================
 
-[zChat](https://www.spigotmc.org/resources/znpcsplus.109380/) is a Spigot plugin that is simple to format and manage your chat on your server.
+[zChat](https://www.spigotmc.org/resources/zchat.116042/) is a Spigot plugin that is simple to format and manage your chat on your server.
 
 ## Features
 - Support for all versions from 1.13 to 1.20.4
