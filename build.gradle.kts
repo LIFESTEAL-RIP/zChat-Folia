@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "dev.mrzcookie"
-version = "1.0.0"
+version = "1.0.1"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(8))
@@ -24,6 +24,7 @@ dependencies {
     implementation("net.kyori:adventure-platform-bukkit:4.3.2")
     implementation("net.kyori:adventure-text-minimessage:4.16.0")
     implementation("net.kyori:adventure-text-serializer-plain:4.16.0")
+    implementation("net.kyori:adventure-text-serializer-legacy:4.16.0")
 
     compileOnly("net.luckperms:api:5.4")
     compileOnly("me.clip:placeholderapi:2.11.5")
@@ -40,7 +41,13 @@ tasks {
 
     processResources {
         filteringCharset = Charsets.UTF_8.name()
+
         filesMatching("plugin.yml") {
+            expand(
+                    "version" to project.version
+            )
+        }
+        filesMatching("config.yml") {
             expand(
                     "version" to project.version
             )

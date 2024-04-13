@@ -21,32 +21,34 @@ public class CooldownCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         FileConfiguration config = this.plugin.getConfig();
 
-        if (args.length > 0) {
-            switch (args[0].toLowerCase()) {
-                case "set":
-                    if (args.length == 2) {
-                        config.set("commands.chatcooldown.interval", Integer.parseInt(args[1]));
-                        this.plugin.saveConfig();
-
-                        this.plugin.getMessageManager().send(sender, config.getString("commands.chatcooldown.messages.cooldown-set").replace("{cooldown}", args[1]));
-                    } else {
-                        this.plugin.getMessageManager().send(sender, config.getString("commands.chatcooldown.messages.error.specify-cooldown"));
-                    }
-                    break;
-                case "toggle":
-                    boolean isEnabled = config.getBoolean("chat-cooldown.enabled", false);
-
-                    config.set("chat-cooldown.enabled", !isEnabled);
-                    this.plugin.saveConfig();
-
-                    this.plugin.getMessageManager().send(sender, config.getString(isEnabled ? "commands.chatcooldown.messages.disabled-cooldown" : "commands.chatcooldown.messages.enabled-cooldown"));
-                    break;
-                default:
-                    this.plugin.getMessageManager().send(sender, config.getString("messages.error.usage").replace("{usage}", "/" + label + " <set/toggle> [<seconds>]"));
-                    break;
-            }
-        } else {
+        if (args.length == 0) {
             this.plugin.getMessageManager().send(sender, config.getString("messages.error.usage").replace("{usage}", "/" + label + " <set/toggle> [<seconds>]"));
+            return true;
+        }
+
+        switch (args[0].toLowerCase()) {
+            case "set":
+                if (args.length != 2) {
+                    this.plugin.getMessageManager().send(sender, config.getString("commands.chatcooldown.messages.error.specify-cooldown"));
+                    break;
+                }
+
+                config.set("commands.chatcooldown.interval", Integer.parseInt(args[1]));
+                this.plugin.saveConfig();
+
+                this.plugin.getMessageManager().send(sender, config.getString("commands.chatcooldown.messages.cooldown-set").replace("{cooldown}", args[1]));
+                break;
+            case "toggle":
+                boolean isEnabled = config.getBoolean("chat-cooldown.enabled", false);
+
+                config.set("chat-cooldown.enabled", !isEnabled);
+                this.plugin.saveConfig();
+
+                this.plugin.getMessageManager().send(sender, config.getString(isEnabled ? "commands.chatcooldown.messages.disabled-cooldown" : "commands.chatcooldown.messages.enabled-cooldown"));
+                break;
+            default:
+                this.plugin.getMessageManager().send(sender, config.getString("messages.error.usage").replace("{usage}", "/" + label + " <set/toggle> [<seconds>]"));
+                break;
         }
 
         return true;

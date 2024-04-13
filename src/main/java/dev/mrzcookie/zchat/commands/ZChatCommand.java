@@ -21,25 +21,25 @@ public class ZChatCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         FileConfiguration config = this.plugin.getConfig();
 
-        if (args.length > 0) {
-            switch (args[0].toLowerCase()) {
-                case "version":
-                    this.plugin.getMessageManager().send(sender, "zChat <gray>v" + this.plugin.getDescription().getVersion() + "</gray><newline>Created by <color:#3399ff>MrZCookie</color>");
-                    break;
-                case "reload":
-                    plugin.reloadConfig();
-                    plugin.saveDefaultConfig();
-                    plugin.getConfig().options().copyDefaults(true);
-                    plugin.saveConfig();
-
-                    this.plugin.getMessageManager().send(sender, config.getString("commands.zchat.messages.plugin-reloaded"));
-                    break;
-                default:
-                    this.plugin.getMessageManager().send(sender, config.getString("messages.error.usage").replace("{usage}", "/" + label + " <version/reload>"));
-                    break;
-            }
-        } else {
+        if (args.length == 0) {
             this.plugin.getMessageManager().send(sender, config.getString("messages.error.usage").replace("{usage}", "/" + label + " <version/reload>"));
+            return true;
+        }
+
+        switch (args[0].toLowerCase()) {
+            case "version":
+                this.plugin.getMessageManager().send(sender, "zChat <gray>v" + this.plugin.getDescription().getVersion() + "</gray><newline>Created by <color:#3399ff>MrZCookie</color>");
+                break;
+            case "reload":
+                plugin.reloadConfig();
+                plugin.saveDefaultConfig();
+                plugin.saveConfig();
+
+                this.plugin.getMessageManager().send(sender, config.getString("commands.zchat.messages.plugin-reloaded"));
+                break;
+            default:
+                this.plugin.getMessageManager().send(sender, config.getString("messages.error.usage").replace("{usage}", "/" + label + " <version/reload>"));
+                break;
         }
 
         return true;

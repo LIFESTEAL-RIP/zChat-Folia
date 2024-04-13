@@ -3,13 +3,13 @@ package dev.mrzcookie.zchat.listeners;
 import dev.mrzcookie.zchat.ZChatPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -73,21 +73,22 @@ public class ChatListener implements Listener {
 
         if (config.getBoolean("formatted-chat.enabled")) {
             if (!event.isCancelled()) {
-                event.setCancelled(true);
-
-                String formattedMessage = getFormattedMesssage(player, event.getMessage());
-                plugin.getMessageManager().broadcast(formattedMessage);
+                Component formattedMessage = getFormattedMesssage(player, event.getMessage());
+                if (formattedMessage != null) {
+                    event.setCancelled(true);
+                    plugin.getMessageManager().getAdventure().all().sendMessage(formattedMessage);
+                }
             }
         }
 
         event.getFormat();
     }
 
-    private String getFormattedMesssage(Player player, String message) {
+    private Component getFormattedMesssage(Player player, String message) {
         FileConfiguration config = this.plugin.getConfig();
         ConfigurationSection formatsSection = config.getConfigurationSection("formatted-chat.formats");
 
-        String finalMessage = null;
+        Component finalMessage = null;
         int highestPriority = -1;
 
         if (formatsSection != null) {
@@ -112,17 +113,26 @@ public class ChatListener implements Listener {
                                     .map(lpPlayer -> lpPlayer.getCachedData().getMetaData().getSuffix())
                                     .orElse("");
 
-                            if (player.hasPermission(config.getString("formatted-chat.permissions.colorized-chat"))) {
-                                Component miniMessageComponent = MiniMessage.miniMessage().deserialize(message);
-                                message = PlainTextComponentSerializer.plainText().serialize(miniMessageComponent);
+                            if (!player.hasPermission(config.getString("formatted-chat.permissions.colorized-chat"))) {
+                                message = PlainTextComponentSerializer.plainText().serialize(Component.text(message));
                             }
 
-                            finalMessage =  format
+                            format = format
                                     .replace("{prefix}", prefix)
                                     .replace("{username}", player.getName())
                                     .replace("{displayname}", player.getDisplayName())
                                     .replace("{suffix}", suffix)
                                     .replace("{message}", message);
+
+                            LegacyComponentSerializer serializer = LegacyComponentSerializer.builder()
+                                    .character('&')
+                                    .hexColors()
+                                    .useUnusualXRepeatedCharacterHexFormat()
+                                    .build();
+
+                            format = MiniMessage.miniMessage().serialize(serializer.deserialize(format));
+
+                            finalMessage = MiniMessage.miniMessage().deserialize(format.replace("\\<", "<"));
 
                             highestPriority = priority;
                         }
