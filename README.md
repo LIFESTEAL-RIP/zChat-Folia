@@ -4,7 +4,7 @@ zChat
 [zChat](https://www.spigotmc.org/resources/zchat.116042/) is a Spigot plugin that is simple to format and manage your chat on your server.
 
 ## Features
-- Support for all versions from 1.13 to 1.20.4
+- Support for all versions from 1.13 to 1.20.6
 - Chat Formatting
 - PlaceholderAPI Support
 - [MiniMessage](https://docs.advntr.dev/minimessage/) support
@@ -20,7 +20,7 @@ zChat
 ## Requirements, Extensions & Supported Software
 Requirements:
 - Java 8+
-- Minecraft 1.13 - 1.20.4
+- Minecraft 1.13 - 1.20.6
 - Luckperms
 
 Supported Software:
