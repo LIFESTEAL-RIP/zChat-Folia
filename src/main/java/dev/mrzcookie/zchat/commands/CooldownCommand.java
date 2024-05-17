@@ -8,6 +8,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CooldownCommand implements CommandExecutor, TabCompleter {
@@ -56,13 +57,10 @@ public class CooldownCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        List<String> arguments = new ArrayList<>();
-
         if (args.length == 1) {
-            arguments.add("set");
-            arguments.add("toggle");
+            return Arrays.asList("set", "toggle");
         }
 
-        return arguments;
+        return new ArrayList<>();
     }
 }

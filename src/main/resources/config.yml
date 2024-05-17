@@ -14,7 +14,7 @@ messages:
 formatted-chat:
   enabled: true
   permissions:
-    colorized-chat: chat.colorize
+    colorized-chat: zchat.colorize
   formats:
     default:
       format: "<gray>{prefix}{username}{suffix}</gray> <dark_gray>»</dark_gray> <gray>{message}</gray>"
@@ -28,7 +28,7 @@ formatted-chat:
 chat-filter:
   enabled: true
   permissions:
-    bypass: chat.bypass.filter
+    bypass: zchat.bypass.filter
   messages:
     error:
       blocked-phrase: "<red>You are not allowed to say that!</red>"
@@ -41,7 +41,7 @@ chat-cooldown:
   enabled: true
   interval: 3
   permissions:
-    bypass: chat.bypass.cooldown
+    bypass: zchat.bypass.cooldown
   messages:
     error:
       on-cooldown: "<red>Please wait before sending another message!</red>"
@@ -50,7 +50,7 @@ chat-cooldown:
 toggle-chat:
   chat-enabled: true
   permissions:
-    bypass: chat.bypass.disabled
+    bypass: zchat.bypass.disabled
   messages:
     error:
       chat-disabled: "<red>Chat is currently disabled!</red>"
@@ -59,13 +59,13 @@ toggle-chat:
 commands:
   zchat:
     enabled: true
-    permission: chat.command.zchat
+    permission: zchat.command.zchat
     aliases: []
     messages:
       plugin-reloaded: "<green>zChat has been reloaded successfully.</green>"
   chatcooldown:
     enabled: true
-    permission: chat.command.chatcooldown
+    permission: zchat.command.chatcooldown
     aliases: []
     messages:
       cooldown-set: "<green>The cooldown has been set to {cooldown}."
@@ -75,7 +75,7 @@ commands:
         specify-cooldown: "<red>You must specify the cooldown in seconds!</red>"
   chatfilter:
     enabled: true
-    permission: chat.command.chatfilter
+    permission: zchat.command.chatfilter
     aliases:
       - filter
     messages:
@@ -89,7 +89,7 @@ commands:
         already-removed: "<red>That phrase is already removed!</red>"
   togglechat:
     enabled: true
-    permission: chat.command.togglechat
+    permission: zchat.command.togglechat
     aliases:
       - tc
       - mutechat
@@ -99,7 +99,7 @@ commands:
       chat-enabled-broadcast: "<green>Chat has been enabled by {executer}.</green>"
   clearchat:
     enabled: true
-    permission: chat.command.clearchat
+    permission: zchat.command.clearchat
     aliases:
       - cc
     permissions:

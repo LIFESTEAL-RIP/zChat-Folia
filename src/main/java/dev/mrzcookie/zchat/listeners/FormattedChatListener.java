@@ -7,85 +7,38 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.scheduler.BukkitScheduler;
 
-import java.util.HashSet;
 import java.util.Optional;
 
-public class ChatListener implements Listener {
+public class FormattedChatListener implements Listener {
     private final ZChatPlugin plugin;
-
     private final LuckPerms luckperms;
 
-    private final HashSet<Player> onCooldown;
-
-    public ChatListener(ZChatPlugin plugin) {
+    public FormattedChatListener(ZChatPlugin plugin) {
         this.plugin = plugin;
-
         this.luckperms = plugin.getServer().getServicesManager().load(LuckPerms.class);
-
-        this.onCooldown = new HashSet<>();
     }
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        Player player = event.getPlayer();
         FileConfiguration config = this.plugin.getConfig();
-
-        if (!config.getBoolean("toggle-chat.chat-enabled", true) && !player.hasPermission(config.getString("toggle-chat.permissions.bypass"))) {
-            if (!event.isCancelled()) {
-                event.setCancelled(true);
-                this.plugin.getMessageManager().send(player, config.getString("toggle-chat.messages.error.chat-disabled"));
-            }
-        }
-
-        if (config.getBoolean("chat-cooldown.enabled", false) && !player.hasPermission(config.getString("chat-cooldown.permissions.bypass"))) {
-            if (this.onCooldown.contains(player)) {
-                if (!event.isCancelled()) {
-                    event.setCancelled(true);
-                    this.plugin.getMessageManager().send(player, config.getString("chat-cooldown.messages.error.on-cooldown"));
-                }
-            } else {
-                this.onCooldown.add(player);
-
-                BukkitScheduler scheduler = Bukkit.getScheduler();
-                scheduler.runTaskLater(this.plugin, () -> {
-                    this.onCooldown.remove(player);
-                }, 20L * config.getInt("chat-cooldown.interval", 0));
-            }
-        }
-
-        if (config.getBoolean("chat-filter.enabled", false) && !player.hasPermission(config.getString("chat-filter.permissions.bypass"))) {
-            if (config.getStringList("chat-filter.blocked-phrases").contains(event.getMessage())) {
-                if (!event.isCancelled()) {
-                    event.setCancelled(true);
-                    this.plugin.getMessageManager().send(player, config.getString("chat-filter.messages.error.blocked-phrase"));
-                }
-            }
-        }
 
         if (config.getBoolean("formatted-chat.enabled")) {
-            if (!event.isCancelled()) {
-                Component formattedMessage = getFormattedMesssage(player, event.getMessage());
-                if (formattedMessage != null) {
-                    event.setCancelled(true);
-                    plugin.getMessageManager().getAdventure().all().sendMessage(formattedMessage);
-                }
+            Component formattedMessage = getFormattedMessage(config, event.getPlayer(), event.getMessage());
+            if (formattedMessage != null) {
+                event.setCancelled(true);
+                this.plugin.getMessageManager().getAdventure().all().sendMessage(formattedMessage);
             }
         }
-
-        event.getFormat();
     }
 
-    private Component getFormattedMesssage(Player player, String message) {
-        FileConfiguration config = this.plugin.getConfig();
+    private Component getFormattedMessage(FileConfiguration config, Player player, String message) {
         ConfigurationSection formatsSection = config.getConfigurationSection("formatted-chat.formats");
 
         Component finalMessage = null;

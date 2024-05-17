@@ -1,17 +1,15 @@
 package dev.mrzcookie.zchat.commands;
 
 import dev.mrzcookie.zchat.ZChatPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class FilterCommand implements CommandExecutor, TabCompleter {
     private final ZChatPlugin plugin;
@@ -86,18 +84,12 @@ public class FilterCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        List<String> arguments = new ArrayList<>();
-
         if (args.length == 1) {
-            arguments.add("add");
-            arguments.add("remove");
-            arguments.add("toggle");
-        } else if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("remove")) {
-                arguments.addAll(this.plugin.getConfig().getStringList("chat-filter.blocked-phrases"));
-            }
+            return Arrays.asList("add", "remove", "toggle");
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
+            return this.plugin.getConfig().getStringList("chat-filter.blocked-phrases");
         }
 
-        return arguments;
+        return new ArrayList<>();
     }
 }
