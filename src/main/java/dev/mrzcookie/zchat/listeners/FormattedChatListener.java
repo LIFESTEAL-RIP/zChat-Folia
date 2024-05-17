@@ -30,10 +30,12 @@ public class FormattedChatListener implements Listener {
         FileConfiguration config = this.plugin.getConfig();
 
         if (config.getBoolean("formatted-chat.enabled")) {
-            Component formattedMessage = getFormattedMessage(config, event.getPlayer(), event.getMessage());
-            if (formattedMessage != null) {
-                event.setCancelled(true);
-                this.plugin.getMessageManager().getAdventure().all().sendMessage(formattedMessage);
+            if (!event.isCancelled()) {
+                Component formattedMessage = getFormattedMessage(config, event.getPlayer(), event.getMessage());
+                if (formattedMessage != null) {
+                    event.setCancelled(true);
+                    this.plugin.getMessageManager().getAdventure().all().sendMessage(formattedMessage);
+                }
             }
         }
     }
