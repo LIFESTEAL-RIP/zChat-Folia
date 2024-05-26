@@ -4,10 +4,10 @@ plugins {
 }
 
 group = "dev.mrzcookie"
-version = "1.0.3"
+version = "1.0.4"
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(8))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 repositories {
@@ -44,12 +44,12 @@ tasks {
 
         filesMatching("plugin.yml") {
             expand(
-                    "version" to project.version
+                "version" to project.version
             )
         }
         filesMatching("config.yml") {
             expand(
-                    "version" to project.version
+                "version" to project.version
             )
         }
     }

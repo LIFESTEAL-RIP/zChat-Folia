@@ -1,6 +1,7 @@
 package dev.mrzcookie.zchat.listeners;
 
 import dev.mrzcookie.zchat.ZChatPlugin;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -19,10 +20,16 @@ import java.util.Optional;
 public class FormattedChatListener implements Listener {
     private final ZChatPlugin plugin;
     private final LuckPerms luckperms;
+    private final LegacyComponentSerializer serializer;
 
     public FormattedChatListener(ZChatPlugin plugin) {
         this.plugin = plugin;
         this.luckperms = plugin.getServer().getServicesManager().load(LuckPerms.class);
+        this.serializer = LegacyComponentSerializer.builder()
+                                                   .character('&')
+                                                   .hexColors()
+                                                   .useUnusualXRepeatedCharacterHexFormat()
+                                                   .build();
     }
 
     @EventHandler
@@ -61,12 +68,12 @@ public class FormattedChatListener implements Listener {
                             User luckpermsPlayer = this.luckperms.getUserManager().getUser(player.getUniqueId());
 
                             String prefix = Optional.ofNullable(luckpermsPlayer)
-                                    .map(lpPlayer -> lpPlayer.getCachedData().getMetaData().getPrefix())
-                                    .orElse("");
+                                                    .map(lpPlayer -> lpPlayer.getCachedData().getMetaData().getPrefix())
+                                                    .orElse("");
 
                             String suffix = Optional.ofNullable(luckpermsPlayer)
-                                    .map(lpPlayer -> lpPlayer.getCachedData().getMetaData().getSuffix())
-                                    .orElse("");
+                                                    .map(lpPlayer -> lpPlayer.getCachedData().getMetaData().getSuffix())
+                                                    .orElse("");
 
                             if (!player.hasPermission(config.getString("formatted-chat.permissions.colorized-chat"))) {
                                 message = PlainTextComponentSerializer.plainText().serialize(Component.text(message));
@@ -79,11 +86,7 @@ public class FormattedChatListener implements Listener {
                                     .replace("{suffix}", suffix)
                                     .replace("{message}", message);
 
-                            LegacyComponentSerializer serializer = LegacyComponentSerializer.builder()
-                                    .character('&')
-                                    .hexColors()
-                                    .useUnusualXRepeatedCharacterHexFormat()
-                                    .build();
+                            format = PlaceholderAPI.setPlaceholders(player, format);
 
                             format = MiniMessage.miniMessage().serialize(serializer.deserialize(format));
 
