@@ -1,5 +1,6 @@
 package dev.mrzcookie.zchat;
 
+import com.tcoded.folialib.FoliaLib;
 import dev.mrzcookie.zchat.commands.CommandManager;
 import dev.mrzcookie.zchat.listeners.EventManager;
 import org.bstats.bukkit.Metrics;
@@ -11,6 +12,12 @@ public class ZChatPlugin extends JavaPlugin {
     private MessageManager messageManager;
     private CommandManager commandManager;
     private EventManager eventManager;
+    private static ZChatPlugin instance;
+    public FoliaLib foliaLib;
+
+    public static ZChatPlugin getInstance() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {
@@ -19,6 +26,9 @@ public class ZChatPlugin extends JavaPlugin {
         this.messageManager = new MessageManager(this);
         this.commandManager = new CommandManager(this);
         this.eventManager = new EventManager(this);
+
+        this.foliaLib = new FoliaLib(this);
+        instance = this;
 
         new Metrics(this, 21533);
 

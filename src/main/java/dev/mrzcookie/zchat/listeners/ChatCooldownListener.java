@@ -1,13 +1,11 @@
 package dev.mrzcookie.zchat.listeners;
 
 import dev.mrzcookie.zchat.ZChatPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.HashSet;
 
@@ -32,10 +30,11 @@ public class ChatCooldownListener implements Listener {
             } else {
                 this.onCooldown.add(player);
 
-                BukkitScheduler scheduler = Bukkit.getScheduler();
-                scheduler.runTaskLater(this.plugin, () -> {
-                    this.onCooldown.remove(player);
-                }, 20L * config.getInt("chat-cooldown.interval", 0));
+                ZChatPlugin.getInstance().foliaLib.getImpl().runLaterAsync(() -> this.onCooldown.remove(player), 20L * config.getInt("chat-cooldown.interval", 0));
+//                BukkitScheduler scheduler = Bukkit.getScheduler();
+//                scheduler.runTaskLater(this.plugin, () -> {
+//                    this.onCooldown.remove(player);
+//                }, 20L * config.getInt("chat-cooldown.interval", 0));
             }
         }
     }
